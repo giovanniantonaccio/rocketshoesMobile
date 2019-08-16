@@ -5,7 +5,7 @@ if (__DEV__) {
     .useReactNative()
     .connect();
 
-  // Aqui estamos passando o reactotron para o console da nossa aplicação e ele poderá ser usado em todos os arquivos.
+  console.tron = tron;
 
   tron.clear();
 }
