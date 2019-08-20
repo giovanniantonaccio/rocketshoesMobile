@@ -12,6 +12,7 @@ import {
   EmptyContainer,
   EmptyCart,
   EmptyText,
+  ProductContainer,
   List,
   Product,
   ProductHeader,
@@ -53,7 +54,7 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
           <EmptyText>Seu carrinho está vazio</EmptyText>
         </EmptyContainer>
       ) : (
-        <>
+        <ProductContainer>
           <List
             data={cart}
             keyExtractor={product => String(product.id)}
@@ -93,7 +94,7 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
           <SubmitButton>
             <SubmitButtonText>Finalizar Pedido</SubmitButtonText>
           </SubmitButton>
-        </>
+        </ProductContainer>
       )}
     </Container>
   );

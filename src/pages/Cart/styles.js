@@ -27,6 +27,8 @@ export const EmptyText = styled.Text`
   margin-top: 20px;
 `;
 
+export const ProductContainer = styled.ScrollView``;
+
 export const List = styled.FlatList``;
 
 export const Product = styled.View`
