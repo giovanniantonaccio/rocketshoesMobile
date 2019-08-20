@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as CartActions from '../../store/modules/cart/actions';
 
 import { formatPrice } from '../../util/format';
 
@@ -28,69 +31,74 @@ import {
   TotalAmount,
 } from './styles';
 
-export default class Cart extends Component {
-  state = {
-    products: [
-      {
-        id: 1,
-        title: 'Tênis de Caminhada Leve Confortável',
-        price: 179.9,
-        image:
-          'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
-      },
-      {
-        id: 2,
-        title: 'Tênis VR Caminhada Confortável Detalhes Couro Masculino',
-        price: 139.9,
-        image:
-          'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg',
-      },
-    ],
-  };
-
-  render() {
-    const { products } = this.state;
-
-    return (
-      <Container>
-        <List
-          data={products}
-          keyExtractor={product => String(product.id)}
-          renderItem={({ item }) => (
-            <Product>
-              <ProductHeader>
-                <ProductDetails>
-                  <ProductImage source={{ uri: item.image }} />
-                  <ProductInfo>
-                    <ProductTitle>{item.title}</ProductTitle>
-                    <ProductPrice>{formatPrice(item.price)}</ProductPrice>
-                  </ProductInfo>
-                </ProductDetails>
-                <ProductDeleteContainer>
-                  <ProductDelete />
-                </ProductDeleteContainer>
-              </ProductHeader>
-              <ProductFooter>
-                <Controls>
-                  <MinusControlContainer>
-                    <MinusControl />
-                  </MinusControlContainer>
-                  <AmountControl>1</AmountControl>
-                  <PlusControlContainer>
-                    <PlusControl />
-                  </PlusControlContainer>
-                </Controls>
-                <FooterTotal>{formatPrice(item.price)}</FooterTotal>
-              </ProductFooter>
-            </Product>
-          )}
-        />
-        <TotalText>Total</TotalText>
-        <TotalAmount>{formatPrice(319.9)}</TotalAmount>
-        <SubmitButton>
-          <SubmitButtonText>Finalizar Pedido</SubmitButtonText>
-        </SubmitButton>
-      </Container>
-    );
+function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
+  function increment(product) {
+    updateAmountRequest(product.id, product.amount + 1);
   }
+
+  function decrement(product) {
+    updateAmountRequest(product.id, product.amount - 1);
+  }
+
+  return (
+    <Container>
+      <List
+        data={cart}
+        keyExtractor={product => String(product.id)}
+        renderItem={({ item }) => (
+          <Product>
+            <ProductHeader>
+              <ProductDetails>
+                <ProductImage source={{ uri: item.image }} />
+                <ProductInfo>
+                  <ProductTitle>{item.title}</ProductTitle>
+                  <ProductPrice>{formatPrice(item.price)}</ProductPrice>
+                </ProductInfo>
+              </ProductDetails>
+              <ProductDeleteContainer onPress={() => removeFromCart(item.id)}>
+                <ProductDelete />
+              </ProductDeleteContainer>
+            </ProductHeader>
+            <ProductFooter>
+              <Controls>
+                <MinusControlContainer onPress={() => decrement(item)}>
+                  <MinusControl />
+                </MinusControlContainer>
+                <AmountControl>{item.amount}</AmountControl>
+                <PlusControlContainer onPress={() => increment(item)}>
+                  <PlusControl />
+                </PlusControlContainer>
+              </Controls>
+              <FooterTotal>{formatPrice(item.price)}</FooterTotal>
+            </ProductFooter>
+          </Product>
+        )}
+      />
+      <TotalText>Total</TotalText>
+      <TotalAmount>{total}</TotalAmount>
+      <SubmitButton>
+        <SubmitButtonText>Finalizar Pedido</SubmitButtonText>
+      </SubmitButton>
+    </Container>
+  );
 }
+
+const mapStateToProps = state => ({
+  cart: state.cart.map(product => ({
+    ...product,
+    subtotal: formatPrice(product.price * product.amount),
+  })),
+  total: formatPrice(
+    state.cart.reduce((total, product) => {
+      return total + product.price * product.amount;
+    }, 0)
+  ),
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Cart);
