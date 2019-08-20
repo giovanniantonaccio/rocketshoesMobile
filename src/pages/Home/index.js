@@ -67,6 +67,9 @@ class Home extends Component {
 
 Home.propTypes = {
   addToCartRequest: PropTypes.func.isRequired,
+  amount: PropTypes.shape({
+    amount: PropTypes.number,
+  }).isRequired,
 };
 
 const mapStateToProps = state => ({
