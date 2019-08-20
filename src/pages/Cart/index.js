@@ -84,7 +84,7 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
                       <PlusControl />
                     </PlusControlContainer>
                   </Controls>
-                  <FooterTotal>{formatPrice(item.price)}</FooterTotal>
+                  <FooterTotal>{formatPrice(item.subtotal)}</FooterTotal>
                 </ProductFooter>
               </Product>
             )}
