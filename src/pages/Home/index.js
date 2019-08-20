@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { SafeAreaView } from 'react-navigation';
 import * as CartActions from '../../store/modules/cart/actions';
 
 import { formatPrice } from '../../util/format';
@@ -27,9 +28,12 @@ class Home extends Component {
   };
 
   async componentDidMount() {
-    const response = await api.get('products');
-
-    this.setState({ products: response.data });
+    try {
+      const response = await api.get('/products');
+      this.setState({ products: response.data });
+    } catch (err) {
+      console.tron.error(err);
+    }
   }
 
   handleAddProduct = id => {
@@ -43,24 +47,26 @@ class Home extends Component {
     const { amount } = this.props;
 
     return (
-      <List
-        data={products}
-        keyExtractor={product => String(product.id)}
-        renderItem={({ item }) => (
-          <Container>
-            <ProductImage source={{ uri: item.image }} />
-            <ProductTitle>{item.title}</ProductTitle>
-            <ProductPrice>{formatPrice(item.price)}</ProductPrice>
-            <AddToCartButton onPress={() => this.handleAddProduct(item.id)}>
-              <ProductAmount>
-                <ProductAmountIcon />
-                <ProductAmountText>{amount[item.id] || 0}</ProductAmountText>
-              </ProductAmount>
-              <ButtonText>Adicionar</ButtonText>
-            </AddToCartButton>
-          </Container>
-        )}
-      />
+      <SafeAreaView>
+        <List
+          data={products}
+          keyExtractor={product => String(product.id)}
+          renderItem={({ item }) => (
+            <Container>
+              <ProductImage source={{ uri: item.image }} />
+              <ProductTitle>{item.title}</ProductTitle>
+              <ProductPrice>{formatPrice(item.price)}</ProductPrice>
+              <AddToCartButton onPress={() => this.handleAddProduct(item.id)}>
+                <ProductAmount>
+                  <ProductAmountIcon />
+                  <ProductAmountText>{amount[item.id] || 0}</ProductAmountText>
+                </ProductAmount>
+                <ButtonText>Adicionar</ButtonText>
+              </AddToCartButton>
+            </Container>
+          )}
+        />
+      </SafeAreaView>
     );
   }
 }

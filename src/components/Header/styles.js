@@ -12,10 +12,9 @@ export const Wrapper = styled.SafeAreaView`
 `;
 
 export const Container = styled.View`
-  display: flex;
+  flex: 1;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
   padding: 20px;
 `;
 
