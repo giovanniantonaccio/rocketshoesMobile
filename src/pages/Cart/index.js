@@ -9,6 +9,9 @@ import { formatPrice } from '../../util/format';
 
 import {
   Container,
+  EmptyContainer,
+  EmptyCart,
+  EmptyText,
   List,
   Product,
   ProductHeader,
@@ -44,43 +47,54 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
 
   return (
     <Container>
-      <List
-        data={cart}
-        keyExtractor={product => String(product.id)}
-        renderItem={({ item }) => (
-          <Product>
-            <ProductHeader>
-              <ProductDetails>
-                <ProductImage source={{ uri: item.image }} />
-                <ProductInfo>
-                  <ProductTitle>{item.title}</ProductTitle>
-                  <ProductPrice>{formatPrice(item.price)}</ProductPrice>
-                </ProductInfo>
-              </ProductDetails>
-              <ProductDeleteContainer onPress={() => removeFromCart(item.id)}>
-                <ProductDelete />
-              </ProductDeleteContainer>
-            </ProductHeader>
-            <ProductFooter>
-              <Controls>
-                <MinusControlContainer onPress={() => decrement(item)}>
-                  <MinusControl />
-                </MinusControlContainer>
-                <AmountControl>{item.amount}</AmountControl>
-                <PlusControlContainer onPress={() => increment(item)}>
-                  <PlusControl />
-                </PlusControlContainer>
-              </Controls>
-              <FooterTotal>{formatPrice(item.price)}</FooterTotal>
-            </ProductFooter>
-          </Product>
-        )}
-      />
-      <TotalText>Total</TotalText>
-      <TotalAmount>{total}</TotalAmount>
-      <SubmitButton>
-        <SubmitButtonText>Finalizar Pedido</SubmitButtonText>
-      </SubmitButton>
+      {cart.length === 0 ? (
+        <EmptyContainer>
+          <EmptyCart />
+          <EmptyText>Seu carrinho está vazio</EmptyText>
+        </EmptyContainer>
+      ) : (
+        <>
+          <List
+            data={cart}
+            keyExtractor={product => String(product.id)}
+            renderItem={({ item }) => (
+              <Product>
+                <ProductHeader>
+                  <ProductDetails>
+                    <ProductImage source={{ uri: item.image }} />
+                    <ProductInfo>
+                      <ProductTitle>{item.title}</ProductTitle>
+                      <ProductPrice>{formatPrice(item.price)}</ProductPrice>
+                    </ProductInfo>
+                  </ProductDetails>
+                  <ProductDeleteContainer
+                    onPress={() => removeFromCart(item.id)}
+                  >
+                    <ProductDelete />
+                  </ProductDeleteContainer>
+                </ProductHeader>
+                <ProductFooter>
+                  <Controls>
+                    <MinusControlContainer onPress={() => decrement(item)}>
+                      <MinusControl />
+                    </MinusControlContainer>
+                    <AmountControl>{item.amount}</AmountControl>
+                    <PlusControlContainer onPress={() => increment(item)}>
+                      <PlusControl />
+                    </PlusControlContainer>
+                  </Controls>
+                  <FooterTotal>{formatPrice(item.price)}</FooterTotal>
+                </ProductFooter>
+              </Product>
+            )}
+          />
+          <TotalText>Total</TotalText>
+          <TotalAmount>{total}</TotalAmount>
+          <SubmitButton>
+            <SubmitButtonText>Finalizar Pedido</SubmitButtonText>
+          </SubmitButton>
+        </>
+      )}
     </Container>
   );
 }

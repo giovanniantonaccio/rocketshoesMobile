@@ -8,6 +8,25 @@ export const Container = styled.View`
   border-radius: 4px;
 `;
 
+export const EmptyContainer = styled.View`
+  padding: 50px 20px;
+`;
+
+export const EmptyCart = styled(Icon).attrs({
+  name: 'remove-shopping-cart',
+  color: colors.darkGray,
+  size: 52,
+})`
+  align-self: center;
+`;
+
+export const EmptyText = styled.Text`
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 20px;
+`;
+
 export const List = styled.FlatList``;
 
 export const Product = styled.View`
